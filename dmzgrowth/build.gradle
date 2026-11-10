@@ -1,0 +1,47 @@
+plugins {
+    id 'java'
+    id 'net.minecraftforge.gradle' version '6.0.+'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
+    id 'org.spongepowered.mixin' version '0.7.+'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = mod_id }
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: mapping_channel, version: mapping_version
+    runs {
+        client { workingDirectory project.file('run'); mods { "${mod_id}" { source sourceSets.main } } }
+        server { workingDirectory project.file('run'); args '--nogui'; mods { "${mod_id}" { source sourceSets.main } } }
+    }
+}
+
+mixin {
+    add sourceSets.main, "${mod_id}.refmap.json"
+    config "${mod_id}.mixins.json"
+}
+
+repositories {
+    maven { url = 'https://maven.minecraftforge.net/' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+    maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url = 'https://maven.theillusivec4.top/' }
+    flatDir { dirs 'libs' }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    // Coloca el jar de DMZ (compilado de dragonminez-main) en libs/ con nombre dragonminez-2.2.1.jar
+    implementation fg.deobf(name: 'dragonminez-2.2.1')
+}
+
+tasks.named('processResources') {
+    var props = [mod_id: mod_id, mod_name: mod_name, mod_version: mod_version, forge_version: forge_version]
+    inputs.properties props
+    filesMatching('META-INF/mods.toml') { expand props }
+}
