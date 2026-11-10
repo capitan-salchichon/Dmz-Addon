@@ -28,8 +28,8 @@ import java.util.List;
 @Mixin(value = CharacterStatsScreen.class, remap = false)
 public abstract class CharacterStatsScreenMixin {
     @Shadow private StatsData statsData;
-    @Shadow protected abstract int getUiWidth();
-    @Shadow protected abstract int getUiHeight();
+    private int getUiWidth() { return ((ScaledScreenInvoker) (Object) this).dmzgrowth$getUiWidth(); }
+    private int getUiHeight() { return ((ScaledScreenInvoker) (Object) this).dmzgrowth$getUiHeight(); }
 
     private static final int LABEL = 0x7CFDD6, VALUE = 0xFFE593;
 
