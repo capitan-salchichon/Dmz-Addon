@@ -21,21 +21,33 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Build DragonMineZ (upstream main)
+      - name: Clone DragonMineZ (upstream main)
+        run: git clone --depth 1 https://github.com/DragonMineZ/dragonminez.git dmz
+
+      - name: Cache DMZ jar
+        id: dmzcache
+        uses: actions/cache@v4
+        with:
+          path: dmz-jar
+          key: dmz-jar-v1
+
+      - name: Build DragonMineZ
+        if: steps.dmzcache.outputs.cache-hit != 'true'
         run: |
-          git clone --depth 1 https://github.com/DragonMineZ/dragonminez.git dmz
           cd dmz
           chmod +x gradlew
           ./gradlew build -x test --no-daemon 2>&1 | tee ../dmz-build.log
-          exit ${PIPESTATUS[0]}
+          test ${PIPESTATUS[0]} -eq 0
+          cd ..
+          mkdir -p dmz-jar
+          JAR=$(ls dmz/build/libs/*.jar | grep -v -e sources -e javadoc | head -1)
+          cp "$JAR" dmz-jar/dragonminez.jar
 
       - name: Prepare addon
         run: |
           if [ -f dmzgrowth-checkpoint10.zip ]; then unzip -q -o dmzgrowth-checkpoint10.zip; fi
           mkdir -p dmzgrowth/libs
-          JAR=$(ls dmz/build/libs/*.jar | grep -v -e sources -e javadoc | head -1)
-          echo "Usando $JAR"
-          cp "$JAR" dmzgrowth/libs/dragonminez-2.2.1.jar
+          cp dmz-jar/dragonminez.jar dmzgrowth/libs/dragonminez-2.2.1.jar
           cp -r dmz/gradle dmzgrowth/gradle
           cp dmz/gradlew dmzgrowth/gradlew
 
@@ -52,7 +64,7 @@ jobs:
           mkdir -p out
           if [ "${{ job.status }}" = "success" ]; then echo SUCCESS > out/status.txt; else echo FAILED > out/status.txt; fi
           echo "commit: $GITHUB_SHA" >> out/status.txt
-          { grep -E "error:|warning: \[|FAILED|Caused by|What went wrong|cannot find symbol|does not exist|Mixin" -A4 addon-build.log | head -300; } > out/errors.txt 2>/dev/null || true
+          { grep -E "error:|warning: \\[|FAILED|Caused by|What went wrong|cannot find symbol|does not exist|Mixin" -A4 addon-build.log | head -300; } > out/errors.txt 2>/dev/null || true
           tail -n 200 addon-build.log > out/addon-tail.txt 2>/dev/null || true
           tail -n 80 dmz-build.log > out/dmz-tail.txt 2>/dev/null || true
           git config user.name "ci"

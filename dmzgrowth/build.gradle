@@ -37,7 +37,7 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     // Coloca el jar de DMZ (compilado de dragonminez-main) en libs/ con nombre dragonminez-2.2.1.jar
-    implementation fg.deobf(name: 'dragonminez-2.2.1')
+    implementation fg.deobf('dmz:dragonminez:2.2.1')
 }
 
 tasks.named('processResources') {
