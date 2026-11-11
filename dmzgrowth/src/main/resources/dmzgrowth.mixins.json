@@ -13,7 +13,9 @@
     "RacialRegistryMixin",
     "NamekAssimilationMixin",
     "CaptureRequestMixin",
-    "NamekianConfigMixin"
+    "NamekianConfigMixin",
+    "SkillsConfigMixin",
+    "NamekRegenGuardMixin"
   ],
   "client": [
     "ActionsNodeMixin",
