@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.server.ServerLifecycleHooks;
@@ -37,15 +38,19 @@ public class AssimilationSequences {
     }
 
     private static void freeze(ServerPlayer target, int ticks) {
-        target.setInvulnerable(true);
         target.addEffect(new MobEffectInstance(MainEffects.STUN.get(), ticks, 0, false, false, false));
         target.addEffect(new MobEffectInstance(MobEffects.JUMP, ticks, 128, false, false, false)); // sin saltar
     }
 
     private static void release(ServerPlayer target) {
-        target.setInvulnerable(false);
         target.removeEffect(MainEffects.STUN.get());
         target.removeEffect(MobEffects.JUMP);
+    }
+
+    /** Invulnerable durante la secuencia por EVENTO (la bandera de invulnerabilidad de Minecraft se guarda en disco). */
+    @SubscribeEvent
+    public void onAttack(LivingAttackEvent e) {
+        if (!ACTIVE.isEmpty() && e.getEntity() instanceof ServerPlayer sp && ACTIVE.containsKey(sp.getUUID())) e.setCanceled(true);
     }
 
     @SubscribeEvent
