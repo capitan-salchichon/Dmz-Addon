@@ -19,6 +19,9 @@ public final class GrowthConfig {
     public static final ForgeConfigSpec.IntValue SCOUTER_INTERVAL_TICKS;
     public static final ForgeConfigSpec.IntValue SCOUTER_MAX_ENTRIES;
     public static final ForgeConfigSpec.DoubleValue ENERGY_KI_WEIGHT;
+    public static final ForgeConfigSpec.DoubleValue NAMEK_REGEN_HEALTH_RATIO;
+    public static final ForgeConfigSpec.DoubleValue NAMEK_ASSIMILATION_RATIO;
+    public static final ForgeConfigSpec.ConfigValue<String> NAMEK_ASSIMILATION_STATS;
     public static final ForgeConfigSpec.BooleanValue TRANSFORM_PROGRESSIVE;
     public static final ForgeConfigSpec.DoubleValue TRANSFORM_CURVE;
     public static final ForgeConfigSpec.DoubleValue ZENKAI_FRACTION_MIN;
@@ -62,6 +65,14 @@ public final class GrowthConfig {
         b.push("kiTechniques");
         ENERGY_KI_WEIGHT = b.comment("Ki Completo = PWR + ENE: el dano de tecnicas de ki suma la stat ENE con este peso (0.5 = peso de soporte de DMZ). 0 = formula original de DMZ (solo PWR).")
                 .defineInRange("energyWeight", 0.5, 0.0, 10.0);
+        b.pop();
+        b.push("namekian");
+        NAMEK_REGEN_HEALTH_RATIO = b.comment("Fraccion de vida que cura la regeneracion namekiana (1.0 = toda la vida). El coste de ki y stamina es el de DMZ.")
+                .defineInRange("regenHealthRatio", 1.0, 0.0, 1.0);
+        NAMEK_ASSIMILATION_RATIO = b.comment("Que fraccion de cada stat del asimilado se suma al namekiano (1.0 = completa). PROVISIONAL.")
+                .defineInRange("assimilationRatio", 1.0, 0.0, 10.0);
+        NAMEK_ASSIMILATION_STATS = b.comment("Stats de pelea que se suman, separadas por coma. PROVISIONAL: las seis.")
+                .define("assimilationStats", "STR,SKP,RES,VIT,PWR,ENE");
         b.pop();
         b.push("scouter");
         SCOUTER_RANGE = b.comment("Alcance de deteccion de Presencia del scouter, en bloques (objetivo del prompt: ~3000).")

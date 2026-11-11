@@ -85,6 +85,16 @@ public class GrowthData {
         }
     }
 
+    /** Reinicio de personaje (Dende / asimilacion): conserva el Potencial inicial de ESTE personaje y vuelve al Limite inicial. */
+    public void resetToInitial() {
+        if (!rolled) return;
+        potential = initialPotential;
+        limit = GrowthConfig.INITIAL_LIMIT.get();
+        extremeSeconds = 0;
+        zenkaiStreak = 0;
+        trainingAccum = 0;
+    }
+
     public int getExtremeSeconds() { return extremeSeconds; }
 
     public CompoundTag save() {

@@ -10,12 +10,16 @@
     "MinigameSessionsAccessor",
     "StatsDataAccessor",
     "ZenkaiMixin",
-    "RacialRegistryMixin"
+    "RacialRegistryMixin",
+    "NamekAssimilationMixin",
+    "CaptureRequestMixin",
+    "NamekianConfigMixin"
   ],
   "client": [
     "ActionsNodeMixin",
     "CharacterStatsScreenMixin",
-    "ScaledScreenInvoker"
+    "ScaledScreenInvoker",
+    "RacialRequestScreenMixin"
   ],
   "injectors": { "defaultRequire": 1 }
 }

@@ -74,4 +74,14 @@ public abstract class StatsDataMixin {
     private void dmzgrowth$kiDamageNoForms(CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(cir.getReturnValue() + dmzgrowth$kiEnergyTerm(false, true));
     }
+
+    /** Reinicio completo de personaje (Dende, asimilacion): el Potencial y el Limite vuelven a su estado inicial. */
+    @Inject(method = "resetPlayerProgress", at = @At("RETURN"))
+    private void dmzgrowth$resetGrowth(ServerPlayer p, Integer keepPercentage, boolean keepSkills, boolean forceSaiyanTail, CallbackInfo ci) {
+        if (keepPercentage != null) return; // reinicio parcial: no se toca
+        p.getCapability(GrowthCapability.INSTANCE).ifPresent(g -> {
+            g.resetToInitial();
+            GrowthNetwork.sync(p);
+        });
+    }
 }
