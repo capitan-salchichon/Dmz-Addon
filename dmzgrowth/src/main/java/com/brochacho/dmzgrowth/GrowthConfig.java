@@ -18,6 +18,7 @@ public final class GrowthConfig {
     public static final ForgeConfigSpec.IntValue SCOUTER_RANGE;
     public static final ForgeConfigSpec.IntValue SCOUTER_INTERVAL_TICKS;
     public static final ForgeConfigSpec.IntValue SCOUTER_MAX_ENTRIES;
+    public static final ForgeConfigSpec.DoubleValue ENERGY_KI_WEIGHT;
     public static final ForgeConfigSpec.BooleanValue TRANSFORM_PROGRESSIVE;
     public static final ForgeConfigSpec.DoubleValue TRANSFORM_CURVE;
     public static final ForgeConfigSpec.DoubleValue ZENKAI_FRACTION_MIN;
@@ -57,6 +58,10 @@ public final class GrowthConfig {
         EXTREME_GAIN_MULT_MAX = b.defineInRange("gainMultiplierMax", 25.0, 0.0, 1000.0);
         EXTREME_POTENTIAL_RATIO = b.comment("Potencial ganado = ganancia de Limite x este ratio (1.0 = igual). PROVISIONAL.")
                 .defineInRange("potentialGainRatio", 1.0, 0.0, 100.0);
+        b.pop();
+        b.push("kiTechniques");
+        ENERGY_KI_WEIGHT = b.comment("Ki Completo = PWR + ENE: el dano de tecnicas de ki suma la stat ENE con este peso (0.5 = peso de soporte de DMZ). 0 = formula original de DMZ (solo PWR).")
+                .defineInRange("energyWeight", 0.5, 0.0, 10.0);
         b.pop();
         b.push("scouter");
         SCOUTER_RANGE = b.comment("Alcance de deteccion de Presencia del scouter, en bloques (objetivo del prompt: ~3000).")

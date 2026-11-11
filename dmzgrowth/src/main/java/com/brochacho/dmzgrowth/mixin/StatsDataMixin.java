@@ -1,5 +1,6 @@
 package com.brochacho.dmzgrowth.mixin;
 
+import com.brochacho.dmzgrowth.GrowthConfig;
 import com.brochacho.dmzgrowth.GrowthEvents;
 import com.brochacho.dmzgrowth.ProgressiveTransformation;
 import com.brochacho.dmzgrowth.data.GrowthCapability;
@@ -44,5 +45,33 @@ public abstract class StatsDataMixin {
     @Inject(method = "getFormMultiplier", at = @At("RETURN"), cancellable = true)
     private void dmzgrowth$progressiveForm(String statName, CallbackInfoReturnable<Double> cir) {
         cir.setReturnValue(ProgressiveTransformation.adjust((StatsData) (Object) this, statName, cir.getReturnValue()));
+    }
+
+    // ---- Tecnicas de expulsion de ki: el dano pasa a usar el Ki Completo (PWR + ENE) ----
+
+    /** Termino de ENE que se suma al calculo original de DMZ (que solo usaba PWR). */
+    private double dmzgrowth$kiEnergyTerm(boolean withFormMult, boolean withRelease) {
+        double w = GrowthConfig.ENERGY_KI_WEIGHT.get();
+        if (w <= 0.0) return 0.0;
+        StatsData self = (StatsData) (Object) this;
+        double t = w * self.getStats().getEnergy() * self.getStatScaling("ENE");
+        if (withFormMult) t *= self.getTotalMultiplier("ENE");
+        if (withRelease) t *= self.getResources().getPowerRelease() / 100.0;
+        return t;
+    }
+
+    @Inject(method = "getKiDamage", at = @At("RETURN"), cancellable = true)
+    private void dmzgrowth$kiDamage(CallbackInfoReturnable<Double> cir) {
+        cir.setReturnValue(cir.getReturnValue() + dmzgrowth$kiEnergyTerm(true, true));
+    }
+
+    @Inject(method = "getMaxKiDamage", at = @At("RETURN"), cancellable = true)
+    private void dmzgrowth$maxKiDamage(CallbackInfoReturnable<Double> cir) {
+        cir.setReturnValue(cir.getReturnValue() + dmzgrowth$kiEnergyTerm(true, false));
+    }
+
+    @Inject(method = "getKiDamageNoForms", at = @At("RETURN"), cancellable = true)
+    private void dmzgrowth$kiDamageNoForms(CallbackInfoReturnable<Double> cir) {
+        cir.setReturnValue(cir.getReturnValue() + dmzgrowth$kiEnergyTerm(false, true));
     }
 }
