@@ -5,14 +5,12 @@ import com.dragonminez.common.config.ConfigManager;
 import com.dragonminez.common.config.GeneralServerConfig;
 import com.dragonminez.common.init.MainSounds;
 import com.dragonminez.common.network.NetworkHandler;
-import com.dragonminez.common.network.S2C.AssimilationVfxS2C;
 import com.dragonminez.common.network.S2C.StatsSyncS2C;
 import com.dragonminez.common.racial.RacialData;
 import com.dragonminez.common.racial.RacialStatUtil;
 import com.dragonminez.common.racial.capture.RacialCapture;
 import com.dragonminez.common.stats.StatsCapability;
 import com.dragonminez.common.stats.StatsData;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 
@@ -53,10 +51,8 @@ public final class PlayerAssimilation {
         targetData.resetPlayerProgress(target, null, false, true);
 
         // 3) Efectos, curacion y sincronizacion.
-        NetworkHandler.sendToTrackingEntityAndSelf(new AssimilationVfxS2C(target.getId(), namek.getId()), target);
         namek.level().playSound(null, namek.getX(), namek.getY(), namek.getZ(), MainSounds.STACK_FORM.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
         RacialCapture.heal(namek, cfg.getAssimilationHealthRegen());
-        namek.displayClientMessage(Component.translatable("message.dragonminez.racial.namek.success"), true);
         NetworkHandler.sendToTrackingEntityAndSelf(new StatsSyncS2C(namek), namek);
         NetworkHandler.sendToTrackingEntityAndSelf(new StatsSyncS2C(target), target);
     }

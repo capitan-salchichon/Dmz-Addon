@@ -19,6 +19,7 @@ public final class GrowthNetwork {
     public static void register() {
         CHANNEL.registerMessage(0, GrowthSyncS2C.class, GrowthSyncS2C::encode, GrowthSyncS2C::decode, GrowthSyncS2C::handle);
         CHANNEL.registerMessage(2, UseAbilityC2S.class, UseAbilityC2S::encode, UseAbilityC2S::decode, UseAbilityC2S::handle);
+        CHANNEL.registerMessage(3, AssimilationSequenceS2C.class, AssimilationSequenceS2C::encode, AssimilationSequenceS2C::decode, AssimilationSequenceS2C::handle);
         CHANNEL.registerMessage(1, PresenceSyncS2C.class, PresenceSyncS2C::encode, PresenceSyncS2C::decode, PresenceSyncS2C::handle);
     }
 

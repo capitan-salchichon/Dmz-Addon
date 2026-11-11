@@ -1,7 +1,7 @@
 package com.brochacho.dmzgrowth.mixin;
 
 import com.brochacho.dmzgrowth.namek.ConsentFlag;
-import com.brochacho.dmzgrowth.namek.PlayerAssimilation;
+import com.brochacho.dmzgrowth.namek.AssimilationSequences;
 import com.dragonminez.common.config.ConfigManager;
 import com.dragonminez.common.racial.capture.CaptureRequest;
 import com.dragonminez.common.racial.impl.NamekAssimilation;
@@ -29,6 +29,6 @@ public abstract class NamekAssimilationMixin {
             return;
         }
         ConsentFlag.ACCEPTED.set(false);
-        PlayerAssimilation.apply(namek, data, targetPlayer);
+        AssimilationSequences.start(namek, targetPlayer);
     }
 }

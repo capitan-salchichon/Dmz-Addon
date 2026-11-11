@@ -19,7 +19,8 @@
     "ActionsNodeMixin",
     "CharacterStatsScreenMixin",
     "ScaledScreenInvoker",
-    "RacialRequestScreenMixin"
+    "RacialRequestScreenMixin",
+    "AssimilationWrapMixin"
   ],
   "injectors": { "defaultRequire": 1 }
 }
