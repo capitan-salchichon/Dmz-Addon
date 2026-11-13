@@ -2,6 +2,8 @@ package com.brochacho.dmzgrowth.data;
 
 import com.brochacho.dmzgrowth.GrowthConfig;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.util.RandomSource;
 
 /**
@@ -16,6 +18,7 @@ public class GrowthData {
     private int extremeSeconds;
     private int zenkaiStreak;
     private int trainingAccum;
+    private final java.util.Set<String> acquired = new java.util.LinkedHashSet<>();
 
     public boolean isRolled() { return rolled; }
     public long getInitialPotential() { return initialPotential; }
@@ -93,7 +96,12 @@ public class GrowthData {
         extremeSeconds = 0;
         zenkaiStreak = 0;
         trainingAccum = 0;
+        acquired.clear(); // el reinicio borra el progreso racial
     }
+
+    /** Habilidades raciales ajenas obtenidas (p. ej. el Bio-Android al absorber): "regeneration", "zenkai". */
+    public boolean hasAcquired(String id) { return acquired.contains(id); }
+    public boolean acquire(String id) { return acquired.add(id); }
 
     public int getExtremeSeconds() { return extremeSeconds; }
 
@@ -106,6 +114,9 @@ public class GrowthData {
         t.putInt("ExtremeSeconds", extremeSeconds);
         t.putInt("ZenkaiStreak", zenkaiStreak);
         t.putInt("TrainingAccum", trainingAccum);
+        ListTag list = new ListTag();
+        for (String a : acquired) list.add(StringTag.valueOf(a));
+        t.put("Acquired", list);
         return t;
     }
 
@@ -117,6 +128,8 @@ public class GrowthData {
         extremeSeconds = t.getInt("ExtremeSeconds");
         zenkaiStreak = t.getInt("ZenkaiStreak");
         trainingAccum = t.getInt("TrainingAccum");
+        acquired.clear();
+        for (var tag : t.getList("Acquired", 8)) acquired.add(tag.getAsString());
     }
 
     public void copyFrom(GrowthData o) { load(o.save()); }

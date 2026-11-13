@@ -2,7 +2,7 @@ package com.brochacho.dmzgrowth.ability;
 
 /**
  * Punto unico donde se registran las habilidades. Se llama desde el constructor del mod (antes de que se
- * registren las teclas). Vacio a proposito: las habilidades de cada raza las defines tu.
+ * registren las teclas). Aqui se registran las habilidades que defines tu (por ahora, las que el Bio-Android obtiene al absorber).
  *
  * Ejemplo de pasiva (clase aparte, solo sobreescribes lo que reacciona):
  *   public class MiPasiva implements Ability {
@@ -17,6 +17,7 @@ public final class Abilities {
     private Abilities() {}
 
     public static void registerAll() {
-        // (vacio)
+        AbilityRegistry.register(new com.brochacho.dmzgrowth.bioandroid.AcquiredRegeneration());
+        AbilityRegistry.register(new com.brochacho.dmzgrowth.bioandroid.AcquiredZenkai());
     }
 }

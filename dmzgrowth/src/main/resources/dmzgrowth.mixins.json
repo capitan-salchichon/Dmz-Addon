@@ -15,7 +15,8 @@
     "CaptureRequestMixin",
     "NamekianConfigMixin",
     "SkillsConfigMixin",
-    "NamekRegenGuardMixin"
+    "NamekRegenGuardMixin",
+    "BioAndroidDrainMixin"
   ],
   "client": [
     "ActionsNodeMixin",
