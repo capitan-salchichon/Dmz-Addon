@@ -1,0 +1,60 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.10/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+MixinGradle is skipping eclipse integration, extension not found
+
+> Task :downloadMcpConfig
+> Task :extractSrg
+> Task :createMcpToSrg
+
+> Task :compileJava
+Note: SpongePowered MIXIN Annotation Processor Version=0.8.5 (MixinGradle Version=0.7.38)
+Note: Supported obfuscation types: ObfuscationServiceMCP supports [notch] ObfuscationServiceFG3 supports [searge]
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing searge composite mappings to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-mappings.tsrg
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing searge composite mappings to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-mappings.tsrg
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing searge composite mappings to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-mappings.tsrg
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing searge composite mappings to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-mappings.tsrg
+/home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/src/main/java/com/brochacho/dmzgrowth/DMZGrowth.java:17: warning: [removal] get() in FMLJavaModLoadingContext has been deprecated and marked for removal
+        var bus = FMLJavaModLoadingContext.get().getModEventBus();
+                                          ^
+/home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/src/main/java/com/brochacho/dmzgrowth/DMZGrowth.java:18: warning: [removal] get() in ModLoadingContext has been deprecated and marked for removal
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GrowthConfig.SPEC);
+                         ^
+2 warnings
+
+> Task :addMixinsToJar
+> Task :processResources
+> Task :classes
+> Task :jar
+> Task :configureReobfTaskForReobfJar
+> Task :reobfJar
+> Task :configureReobfTaskForReobfJarJar
+> Task :addMixinsToJarJar
+> Task :jarJar SKIPPED
+> Task :reobfJarJar SKIPPED
+> Task :assemble
+> Task :compileTestJava NO-SOURCE
+> Task :processTestResources NO-SOURCE
+> Task :testClasses UP-TO-DATE
+> Task :test NO-SOURCE
+> Task :check UP-TO-DATE
+> Task :build
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run_4-1794659746559.json
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.10/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 22s
+11 actionable tasks: 11 executed
