@@ -39,7 +39,7 @@ public abstract class BioAndroidDrainMixin {
         DRAINING.remove();
         if (target == null || ctx.data().getStatus().getDrainingTargetId() != -1) return;
         // DMZ cierra la absorcion cuando la vida del objetivo llega a 1 y lo mata; si sobrevive (Zenkai, totem) tambien cuenta.
-        if (target.isAlive() && target.getHealth() > 1.0f) return;
+        if (target.isAlive() && target instanceof net.minecraft.world.entity.LivingEntity living && living.getHealth() > 1.0f) return;
 
         String key = race(target);
         if (key == null) return;
