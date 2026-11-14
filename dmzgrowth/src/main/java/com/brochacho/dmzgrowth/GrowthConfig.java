@@ -20,6 +20,7 @@ public final class GrowthConfig {
     public static final ForgeConfigSpec.IntValue SCOUTER_MAX_ENTRIES;
     public static final ForgeConfigSpec.DoubleValue ENERGY_KI_WEIGHT;
     public static final ForgeConfigSpec.BooleanValue BIO_EVOLUTION_IS_BASE;
+    public static final ForgeConfigSpec.BooleanValue BIO_EVOLUTION_SURVIVES_DEATH;
     public static final ForgeConfigSpec.DoubleValue NAMEK_REGEN_HEALTH_RATIO;
     public static final ForgeConfigSpec.DoubleValue NAMEK_ASSIMILATION_RATIO;
     public static final ForgeConfigSpec.ConfigValue<String> NAMEK_ASSIMILATION_STATS;
@@ -76,8 +77,10 @@ public final class GrowthConfig {
                 .define("assimilationStats", "STR,SKP,RES,VIT,PWR,ENE");
         b.pop();
         b.push("bioandroid");
-        BIO_EVOLUTION_IS_BASE = b.comment("La evolucion (Semi-Perfecto, Perfecto) se vuelve la forma base: no se puede bajar de ella. Se pierde al morir (comportamiento de DMZ).")
+        BIO_EVOLUTION_IS_BASE = b.comment("La evolucion (Semi-Perfecto, Perfecto) se vuelve la forma base: no se puede bajar de ella. ")
                 .define("evolutionIsBase", true);
+        BIO_EVOLUTION_SURVIVES_DEATH = b.comment("La evolucion es permanente: no se pierde al morir (DMZ normalmente reinicia la forma al morir). Un reinicio completo de personaje si la borra.")
+                .define("evolutionSurvivesDeath", true);
         b.pop();
         b.push("scouter");
         SCOUTER_RANGE = b.comment("Alcance de deteccion de Presencia del scouter, en bloques (objetivo del prompt: ~3000).")

@@ -21,6 +21,7 @@ public class DMZGrowth {
         MinecraftForge.EVENT_BUS.register(new GrowthEvents());
         MinecraftForge.EVENT_BUS.register(new ExtremeTrainingHandler());
         MinecraftForge.EVENT_BUS.register(new PresenceBroadcaster());
+        MinecraftForge.EVENT_BUS.register(new com.brochacho.dmzgrowth.bioandroid.BioEvolutionPersistence());
         MinecraftForge.EVENT_BUS.register(new com.brochacho.dmzgrowth.namek.AssimilationSequences());
     }
 }

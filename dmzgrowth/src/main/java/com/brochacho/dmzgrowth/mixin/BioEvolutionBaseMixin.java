@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class BioEvolutionBaseMixin {
     /**
      * La evolucion del Bio-Android (grupo "bioevolution") se vuelve su forma base: no se puede bajar de ella.
-     * No es permanente: DMZ ya reinicia la forma activa al morir. Solo afecta a esa linea y a esa raza.
+     * Es permanente: no se pierde al morir (ver BioEvolutionPersistence). Solo afecta a esa linea y a esa raza.
      * (ignoreEvolutionFloor = descensos forzados por el propio DMZ: se respetan.)
      */
     @Inject(method = "descendForm", at = @At("HEAD"), cancellable = true)
