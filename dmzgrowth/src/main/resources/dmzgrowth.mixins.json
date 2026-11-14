@@ -18,7 +18,8 @@
     "NamekRegenGuardMixin",
     "BioAndroidDrainMixin",
     "FormConfigMixin",
-    "BioEvolutionBaseMixin"
+    "BioEvolutionBaseMixin",
+    "TransformationsHelperMixin"
   ],
   "client": [
     "ActionsNodeMixin",
