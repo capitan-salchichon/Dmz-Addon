@@ -16,10 +16,14 @@ import java.util.List;
  */
 public final class CompositeRacialAbility implements RacialAbility {
     private final RacialAbility primary;
+    private final RacialAbility action; // quien atiende la accion con tecla: la racial original o la regeneracion elegida
     private final List<RacialAbility> parts;
 
-    public CompositeRacialAbility(RacialAbility primary, List<? extends RacialAbility> extras) {
+    public CompositeRacialAbility(RacialAbility primary, List<? extends RacialAbility> extras) { this(primary, extras, null); }
+
+    public CompositeRacialAbility(RacialAbility primary, List<? extends RacialAbility> extras, RacialAbility actionOverride) {
         this.primary = primary;
+        this.action = actionOverride != null ? actionOverride : primary;
         var all = new java.util.ArrayList<RacialAbility>(extras.size() + 1);
         if (primary != null) all.add(primary);
         all.addAll(extras);
@@ -29,12 +33,12 @@ public final class CompositeRacialAbility implements RacialAbility {
     @Override public String id() { return primary != null ? primary.id() : parts.get(0).id(); }
 
     // --- Accion con tecla de DMZ: solo la racial original ---
-    @Override public boolean canActivate(RacialContext c) { return primary != null && primary.canActivate(c); }
-    @Override public boolean hasActiveAction() { return primary != null && primary.hasActiveAction(); }
-    @Override public boolean hasActiveAction(StatsData d) { return primary != null && primary.hasActiveAction(d); }
-    @Override public boolean isSustainedAction(RacialContext c) { return primary != null && primary.isSustainedAction(c); }
-    @Override public int chargeSeconds(RacialContext c) { return primary == null ? 0 : primary.chargeSeconds(c); }
-    @Override public boolean onActivate(RacialContext c) { return primary != null && primary.onActivate(c); }
+    @Override public boolean canActivate(RacialContext c) { return action != null && action.canActivate(c); }
+    @Override public boolean hasActiveAction() { return action != null && action.hasActiveAction(); }
+    @Override public boolean hasActiveAction(StatsData d) { return action != null && action.hasActiveAction(d); }
+    @Override public boolean isSustainedAction(RacialContext c) { return action != null && action.isSustainedAction(c); }
+    @Override public int chargeSeconds(RacialContext c) { return action == null ? 0 : action.chargeSeconds(c); }
+    @Override public boolean onActivate(RacialContext c) { return action != null && action.onActivate(c); }
     @Override public boolean onSecondaryActivate(RacialContext c) { return primary != null && primary.onSecondaryActivate(c); }
 
     // --- Eventos: se despachan a todas ---

@@ -37,7 +37,9 @@ public abstract class BioAndroidDrainMixin {
     private void dmzgrowth$after(RacialContext ctx, CallbackInfo ci) {
         Entity target = DRAINING.get();
         DRAINING.remove();
-        if (target == null || target.isAlive() || ctx.data().getStatus().getDrainingTargetId() != -1) return;
+        if (target == null || ctx.data().getStatus().getDrainingTargetId() != -1) return;
+        // DMZ cierra la absorcion cuando la vida del objetivo llega a 1 y lo mata; si sobrevive (Zenkai, totem) tambien cuenta.
+        if (target.isAlive() && target.getHealth() > 1.0f) return;
 
         String key = race(target);
         if (key == null) return;

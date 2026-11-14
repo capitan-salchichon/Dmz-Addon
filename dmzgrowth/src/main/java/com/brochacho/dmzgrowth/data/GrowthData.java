@@ -18,6 +18,7 @@ public class GrowthData {
     private int extremeSeconds;
     private int zenkaiStreak;
     private int trainingAccum;
+    private String racialChoice = ""; // "" = accion racial normal de DMZ; "regeneration" = regeneracion
     private int unitsVersion; // 2 = Potencial y Limite en PODER (antes: puntos de stat)
     private String bioFormGroup = "";
     private String bioForm = "";
@@ -113,6 +114,9 @@ public class GrowthData {
     public String getBioFormGroup() { return bioFormGroup; }
     public String getBioForm() { return bioForm; }
 
+    public String getRacialChoice() { return racialChoice; }
+    public void setRacialChoice(String c) { racialChoice = c == null ? "" : c; }
+
     public int getExtremeSeconds() { return extremeSeconds; }
 
     public CompoundTag save() {
@@ -124,6 +128,7 @@ public class GrowthData {
         t.putInt("ExtremeSeconds", extremeSeconds);
         t.putInt("ZenkaiStreak", zenkaiStreak);
         t.putInt("TrainingAccum", trainingAccum);
+        t.putString("RacialChoice", racialChoice);
         t.putInt("UnitsVersion", unitsVersion);
         t.putString("BioFormGroup", bioFormGroup);
         t.putString("BioForm", bioForm);
@@ -141,6 +146,7 @@ public class GrowthData {
         extremeSeconds = t.getInt("ExtremeSeconds");
         zenkaiStreak = t.getInt("ZenkaiStreak");
         trainingAccum = t.getInt("TrainingAccum");
+        racialChoice = t.getString("RacialChoice");
         unitsVersion = t.getInt("UnitsVersion");
         bioFormGroup = t.getString("BioFormGroup");
         bioForm = t.getString("BioForm");

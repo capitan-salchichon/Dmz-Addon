@@ -26,6 +26,17 @@ public final class ClientGrowthCache {
 
     public static void clear() { last = null; }
 
+    /** Eleccion de accion racial ("" o "regeneration"), tal como la ve el cliente. */
+    public static String choice(Player p) {
+        GrowthData d = ensure(p);
+        return d == null ? "" : d.getRacialChoice();
+    }
+
+    public static void setChoiceLocal(Player p, String c) {
+        GrowthData d = ensure(p);
+        if (d != null) d.setRacialChoice(c);
+    }
+
     public static void applyTo(Player p) {
         CompoundTag t = last;
         if (p == null || t == null) return;

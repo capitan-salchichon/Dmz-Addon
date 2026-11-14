@@ -24,7 +24,10 @@ public class AcquiredRegeneration implements Ability {
     }
 
     @Override
-    public boolean use(RacialContext ctx) {
+    public boolean use(RacialContext ctx) { return start(ctx); }
+
+    /** Inicia el canal de regeneracion (mismos cooldowns y valores que el namekiano de DMZ). */
+    public static boolean start(RacialContext ctx) {
         GeneralServerConfig.NamekianRacialConfig cfg = ctx.config().getNamekian();
         if (!cfg.getEnabled()) return false;
         var cd = ctx.data().getCooldowns();

@@ -17,9 +17,9 @@ public abstract class RacialRegistryMixin {
     /** Todos los puntos donde DMZ consulta "la" racial pasan a consultar la racial original + las del addon. */
     @Inject(method = "forPlayer", at = @At("RETURN"), cancellable = true)
     private static void dmzgrowth$composite(StatsData data, CallbackInfoReturnable<Optional<RacialAbility>> cir) {
-        if (AbilityRegistry.isEmpty()) return; // sin habilidades del addon: costo cero
         var extras = AbilityRegistry.forPlayer(data);
-        if (extras.isEmpty()) return;
-        cir.setReturnValue(Optional.of(new CompositeRacialAbility(cir.getReturnValue().orElse(null), extras)));
+        RacialAbility override = com.brochacho.dmzgrowth.racial.RacialChoice.regenSelected(data) ? com.brochacho.dmzgrowth.racial.RegenAction.INSTANCE : null;
+        if (extras.isEmpty() && override == null) return;
+        cir.setReturnValue(Optional.of(new CompositeRacialAbility(cir.getReturnValue().orElse(null), extras, override)));
     }
 }
