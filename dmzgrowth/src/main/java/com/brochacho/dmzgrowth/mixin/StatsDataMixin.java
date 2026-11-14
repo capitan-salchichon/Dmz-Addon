@@ -2,6 +2,7 @@ package com.brochacho.dmzgrowth.mixin;
 
 import com.brochacho.dmzgrowth.GrowthConfig;
 import com.brochacho.dmzgrowth.GrowthEvents;
+import com.brochacho.dmzgrowth.GrowthMath;
 import com.brochacho.dmzgrowth.ProgressiveTransformation;
 import com.brochacho.dmzgrowth.data.GrowthCapability;
 import com.brochacho.dmzgrowth.net.GrowthNetwork;
@@ -27,9 +28,9 @@ public abstract class StatsDataMixin {
         if (player == null) return;
         int base = cir.getReturnValue();
         if (base <= 0) return;
-        int current = getCurrentStatValue(statName);
+        StatsData self = (StatsData) (Object) this;
         player.getCapability(GrowthCapability.INSTANCE).ifPresent(g ->
-                cir.setReturnValue(Math.min(base, g.maxPointsAllowed(current))));
+                cir.setReturnValue(Math.min(base, GrowthMath.maxPoints(self, statName, base, g))));
     }
 
     /** Potencial inicial: se tira solo al crear el personaje (rollInitial ignora si ya existe). */

@@ -14,6 +14,7 @@ public final class ProgressiveTransformation {
     private ProgressiveTransformation() {}
 
     public static double adjust(StatsData data, String stat, double current) {
+        if (BasePower.ignoringForms()) return 1.0; // el poder base (Limite/Potencial) no cuenta las formas
         if (!GrowthConfig.TRANSFORM_PROGRESSIVE.get()) return current;
         var status = data.getStatus();
         if (!status.isActionCharging() || status.getSelectedAction() != ActionMode.FORM) return current;

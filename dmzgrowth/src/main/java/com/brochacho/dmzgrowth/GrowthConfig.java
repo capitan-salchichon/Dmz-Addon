@@ -8,7 +8,6 @@ public final class GrowthConfig {
     public static final ForgeConfigSpec.IntValue POTENTIAL_MIN;
     public static final ForgeConfigSpec.IntValue POTENTIAL_MAX;
     public static final ForgeConfigSpec.IntValue INITIAL_LIMIT;
-    public static final ForgeConfigSpec.DoubleValue POTENTIAL_PER_STAT_POINT;
     public static final ForgeConfigSpec.DoubleValue EXTREME_WEIGHT_FACTOR;
     public static final ForgeConfigSpec.IntValue EXTREME_SECONDS_REQUIRED;
     public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_MULT_MIN;
@@ -36,15 +35,13 @@ public final class GrowthConfig {
     static {
         ForgeConfigSpec.Builder b = new ForgeConfigSpec.Builder();
         b.push("potential");
-        POTENTIAL_MIN = b.comment("Potencial inicial minimo (definido por el usuario: 50) al crear personaje.")
+        POTENTIAL_MIN = b.comment("Potencial inicial minimo, en PODER (definido por el usuario: 50) al crear personaje.")
                 .defineInRange("initialPotentialMin", 50, 0, Integer.MAX_VALUE);
-        POTENTIAL_MAX = b.comment("Potencial inicial maximo (definido por el usuario: 1000) al crear personaje.")
+        POTENTIAL_MAX = b.comment("Potencial inicial maximo, en PODER (definido por el usuario: 1000) al crear personaje.")
                 .defineInRange("initialPotentialMax", 1000, 0, Integer.MAX_VALUE);
-        POTENTIAL_PER_STAT_POINT = b.comment("PROVISIONAL. Potencial que cuesta cada punto de stat (1.0 = como el ejemplo del prompt).")
-                .defineInRange("potentialPerStatPoint", 1.0, 0.0, 1000.0);
         b.pop();
         b.push("limit");
-        INITIAL_LIMIT = b.comment("PROVISIONAL. Limite inicial (techo de cada stat).")
+        INITIAL_LIMIT = b.comment("PROVISIONAL. Limite inicial, en PODER: el poder base (sin formas) no puede pasar de aqui.")
                 .defineInRange("initialLimit", 1000, 1, Integer.MAX_VALUE);
         b.pop();
         b.push("extremeTraining");

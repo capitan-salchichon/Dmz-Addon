@@ -18,6 +18,7 @@ public class GrowthData {
     private int extremeSeconds;
     private int zenkaiStreak;
     private int trainingAccum;
+    private int unitsVersion; // 2 = Potencial y Limite en PODER (antes: puntos de stat)
     private String bioFormGroup = "";
     private String bioForm = "";
     private final java.util.Set<String> acquired = new java.util.LinkedHashSet<>();
@@ -28,31 +29,30 @@ public class GrowthData {
     public long getLimit() { return limit; }
 
     /** Se genera UNA sola vez; si ya existe no hace nada. */
-    public boolean rollInitial(RandomSource random, int highestCurrentStat) {
+    public boolean rollInitial(RandomSource random, double basePower) {
         if (rolled) return false;
         int min = Math.min(GrowthConfig.POTENTIAL_MIN.get(), GrowthConfig.POTENTIAL_MAX.get());
         int max = Math.max(GrowthConfig.POTENTIAL_MIN.get(), GrowthConfig.POTENTIAL_MAX.get());
         initialPotential = min + (max > min ? random.nextInt(max - min + 1) : 0);
         potential = initialPotential;
-        limit = Math.max(GrowthConfig.INITIAL_LIMIT.get(), highestCurrentStat);
+        limit = Math.max(GrowthConfig.INITIAL_LIMIT.get(), (long) Math.ceil(basePower));
+        unitsVersion = 2;
         rolled = true;
         return true;
     }
 
-    /** Cuantos puntos de stat se pueden anadir a una stat con valor actual, segun Limite y Potencial. */
-    public int maxPointsAllowed(int currentStat) {
-        if (!rolled) return 0;
-        long byLimit = Math.max(0L, limit - currentStat);
-        double perPoint = GrowthConfig.POTENTIAL_PER_STAT_POINT.get();
-        long byPotential = perPoint <= 0.0 ? Long.MAX_VALUE : (long) Math.floor(potential / perPoint);
-        return (int) Math.min(Integer.MAX_VALUE, Math.min(byLimit, byPotential));
+    /** Consume Potencial por poder ganado (nunca crea Potencial). */
+    public void consumePower(double powerGained) {
+        if (powerGained <= 0) return;
+        potential = Math.max(0L, potential - (long) Math.ceil(powerGained));
     }
 
-    /** Consume Potencial por puntos de stat ya validados. Nunca crea Potencial. */
-    public void consumeForPoints(int points) {
-        if (points <= 0) return;
-        long cost = (long) Math.ceil(points * GrowthConfig.POTENTIAL_PER_STAT_POINT.get());
-        potential = Math.max(0L, potential - cost);
+    /** Personajes anteriores al cambio de unidades: el Limite sube hasta su poder actual para no quedar incoherente. */
+    public boolean migrateToPowerUnits(double basePower) {
+        if (!rolled || unitsVersion >= 2) return false;
+        limit = Math.max(limit, (long) Math.ceil(basePower));
+        unitsVersion = 2;
+        return true;
     }
 
     /** Suma 1 segundo de Entrenamiento Extremo; devuelve la ganancia de Limite si se completo, o 0. */
@@ -98,6 +98,7 @@ public class GrowthData {
         extremeSeconds = 0;
         zenkaiStreak = 0;
         trainingAccum = 0;
+        unitsVersion = 2;
         acquired.clear(); // el reinicio borra el progreso racial
         bioFormGroup = "";
         bioForm = "";
@@ -123,6 +124,7 @@ public class GrowthData {
         t.putInt("ExtremeSeconds", extremeSeconds);
         t.putInt("ZenkaiStreak", zenkaiStreak);
         t.putInt("TrainingAccum", trainingAccum);
+        t.putInt("UnitsVersion", unitsVersion);
         t.putString("BioFormGroup", bioFormGroup);
         t.putString("BioForm", bioForm);
         ListTag list = new ListTag();
@@ -139,6 +141,7 @@ public class GrowthData {
         extremeSeconds = t.getInt("ExtremeSeconds");
         zenkaiStreak = t.getInt("ZenkaiStreak");
         trainingAccum = t.getInt("TrainingAccum");
+        unitsVersion = t.getInt("UnitsVersion");
         bioFormGroup = t.getString("BioFormGroup");
         bioForm = t.getString("BioForm");
         acquired.clear();

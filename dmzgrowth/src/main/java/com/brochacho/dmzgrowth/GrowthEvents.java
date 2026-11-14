@@ -58,10 +58,8 @@ public class GrowthEvents {
         sp.getCapability(StatsCapability.INSTANCE).ifPresent(stats -> {
             if (!stats.getStatus().isHasCreatedCharacter()) return;
             sp.getCapability(GrowthCapability.INSTANCE).ifPresent(g -> {
-                int highest = Math.max(Math.max(stats.getStats().getStrength(), stats.getStats().getStrikePower()),
-                        Math.max(Math.max(stats.getStats().getResistance(), stats.getStats().getVitality()),
-                                Math.max(stats.getStats().getKiPower(), stats.getStats().getEnergy())));
-                g.rollInitial(sp.getRandom(), highest);
+                double power = BasePower.of(stats);
+                if (!g.rollInitial(sp.getRandom(), power)) g.migrateToPowerUnits(power);
             });
         });
     }
