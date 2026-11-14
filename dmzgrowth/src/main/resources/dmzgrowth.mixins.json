@@ -16,7 +16,8 @@
     "NamekianConfigMixin",
     "SkillsConfigMixin",
     "NamekRegenGuardMixin",
-    "BioAndroidDrainMixin"
+    "BioAndroidDrainMixin",
+    "FormConfigMixin"
   ],
   "client": [
     "ActionsNodeMixin",
