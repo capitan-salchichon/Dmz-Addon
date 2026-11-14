@@ -1,6 +1,9 @@
 package com.brochacho.dmzgrowth.mixin;
 
+import com.brochacho.dmzgrowth.client.ClientGrowthCache;
 import com.brochacho.dmzgrowth.client.KiAspects;
+import com.dragonminez.client.render.shader.ClientGravityState;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import com.brochacho.dmzgrowth.data.GrowthCapability;
 import com.brochacho.dmzgrowth.data.GrowthData;
 import com.dragonminez.client.gui.character.CharacterStatsScreen;
@@ -44,8 +47,7 @@ public abstract class CharacterStatsScreenMixin {
 
         boolean hide = statsData.getStatus().isAndroidUpgraded();
         KiAspects k = hide ? null : KiAspects.of(statsData);
-        GrowthData gr = Minecraft.getInstance().player == null ? null
-                : Minecraft.getInstance().player.getCapability(GrowthCapability.INSTANCE).resolve().orElse(null);
+        GrowthData gr = ClientGrowthCache.ensure(Minecraft.getInstance().player);
         boolean hasGrowth = gr != null && gr.isRolled();
 
         String[] labels = {"Ki de Combate", "Ki Completo", "Soporte (RES+VIT)", "Poder Real", "Presencia", "Potencial", "Limite"};
@@ -74,5 +76,56 @@ public abstract class CharacterStatsScreenMixin {
                         null, 0xFFFF00);
             }
         }
+        dmzgrowth$extremeBar(g, font, getUiWidth() - 137, centerY + 30, mouseX, mouseY);
+    }
+
+    /** Vista de lista: la barra del Entrenamiento Extremo en el hueco libre bajo la fila de velocidad. */
+    @Inject(method = "renderStatisticsInfoList", at = @At("TAIL"))
+    private void dmzgrowth$barInList(GuiGraphics g, int mouseX, int mouseY, CallbackInfo ci) {
+        dmzgrowth$extremeBar(g, Minecraft.getInstance().font, getUiWidth() - 137, getUiHeight() / 2 + 30, mouseX, mouseY);
+    }
+
+    /** Barra de progreso: lo que falta para completar el Entrenamiento Extremo (sube Limite y Potencial). */
+    private void dmzgrowth$extremeBar(GuiGraphics g, Font font, int x, int y, int mouseX, int mouseY) {
+        GrowthData gd = ClientGrowthCache.ensure(Minecraft.getInstance().player);
+        if (gd == null || !gd.isRolled()) return;
+        int required = Math.max(1, ClientGrowthCache.secondsRequired);
+        int done = Math.min(gd.getExtremeSeconds(), required);
+        float frac = done / (float) required;
+
+        TextUtil.drawStringWithBorder(g, font, Component.literal("Entrenamiento Extremo: " + Math.round(frac * 100) + "%"), x, y, 0xC77DFF, 0x000000);
+        int bw = 110, by = y + 11;
+        g.fill(x - 1, by - 1, x + bw + 1, by + 7, 0xFF000000);
+        g.fill(x, by, x + bw, by + 6, 0xFF2B2B2B);
+        g.fill(x, by, x + Math.round(bw * frac), by + 6, 0xFFB16CFF);
+
+        if (mouseX >= x && mouseX <= x + bw && mouseY >= y && mouseY <= by + 7) {
+            List<Component> lines = new java.util.ArrayList<>();
+            lines.add(Component.literal(done + " / " + required + " s").withStyle(ChatFormatting.YELLOW));
+            lines.add(Component.literal("Al completarlo se sube el Limite y el Potencial.").withStyle(ChatFormatting.GRAY));
+            lines.add(Component.literal("Cuenta en un minijuego de TPs con carga entre " + fmt(ClientGrowthCache.factor)
+                    + "x y " + fmt(ClientGrowthCache.overload) + "x tu peso ideal.").withStyle(ChatFormatting.GRAY));
+            TextUtil.renderAdvancedTooltip(g, font, mouseX, mouseY, getUiWidth(), getUiHeight(),
+                    Component.literal("Entrenamiento Extremo").withStyle(ChatFormatting.LIGHT_PURPLE), lines, null, 0xC77DFF);
+        }
+    }
+
+    private static String fmt(double v) { return v == Math.rint(v) ? String.valueOf((long) v) : String.format(java.util.Locale.ROOT, "%.1f", v); }
+
+    /** Tooltip de la gravedad (donde DMZ muestra el peso ideal): se anade el peso del Entrenamiento Extremo y el progreso. */
+    @ModifyArg(method = "renderGravityInfo",
+            at = @At(value = "INVOKE", remap = false,
+                    target = "Lcom/dragonminez/client/util/TextUtil;renderAdvancedTooltip(Lnet/minecraft/client/gui/GuiGraphics;Lnet/minecraft/client/gui/Font;IIIILnet/minecraft/network/chat/Component;Ljava/util/List;Ljava/util/List;I)V"),
+            index = 8)
+    private List<Component> dmzgrowth$extremeWeightTooltip(List<Component> extras) {
+        int ideal = ClientGravityState.getIdealWeight();
+        if (ideal > 0) {
+            extras.add(Component.literal("Entrenamiento Extremo: " + NumberFormattingUtil.formatNumber(Math.round(ideal * ClientGrowthCache.factor))
+                    + " - " + NumberFormattingUtil.formatNumber(Math.round(ideal * ClientGrowthCache.overload))).withStyle(ChatFormatting.LIGHT_PURPLE));
+            GrowthData gd = ClientGrowthCache.ensure(Minecraft.getInstance().player);
+            if (gd != null && gd.isRolled())
+                extras.add(Component.literal("Progreso: " + gd.getExtremeSeconds() + " / " + ClientGrowthCache.secondsRequired + " s").withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+        return extras;
     }
 }

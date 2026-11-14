@@ -41,6 +41,7 @@ public class ExtremeTrainingHandler {
 
         sp.getCapability(GrowthCapability.INSTANCE).ifPresent(g -> {
             long gain = g.tickExtremeSecond(sp.getRandom());
+            if (g.getExtremeSeconds() % 5 == 0) GrowthNetwork.sync(sp); // para que la barra de progreso avance en pantalla
             if (gain > 0) {
                 GrowthNetwork.sync(sp);
             }

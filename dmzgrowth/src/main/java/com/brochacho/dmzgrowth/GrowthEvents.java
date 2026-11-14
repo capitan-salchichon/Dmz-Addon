@@ -15,6 +15,26 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GrowthEvents {
+    private static final java.util.Map<java.util.UUID, Integer> PENDING = new java.util.HashMap<>();
+
+    /** El cliente puede reemplazar su jugador unos ticks despues: se reenvia la sincronizacion una vez mas. */
+    private static void schedule(ServerPlayer sp) { PENDING.put(sp.getUUID(), 20); }
+
+    @SubscribeEvent
+    public void tick(net.minecraftforge.event.TickEvent.ServerTickEvent e) {
+        if (e.phase != net.minecraftforge.event.TickEvent.Phase.END || PENDING.isEmpty()) return;
+        var server = net.minecraftforge.server.ServerLifecycleHooks.getCurrentServer();
+        if (server == null) return;
+        var it = PENDING.entrySet().iterator();
+        while (it.hasNext()) {
+            var en = it.next();
+            if (en.setValue(en.getValue() - 1) > 1) continue;
+            ServerPlayer sp = server.getPlayerList().getPlayer(en.getKey());
+            if (sp != null) GrowthNetwork.sync(sp);
+            it.remove();
+        }
+    }
+
     private static final ResourceLocation KEY = ResourceLocation.fromNamespaceAndPath(DMZGrowth.MOD_ID, "growth");
 
     public static void registerCaps(RegisterCapabilitiesEvent e) { e.register(GrowthData.class); }
@@ -42,16 +62,17 @@ public class GrowthEvents {
         if (!(e.getEntity() instanceof ServerPlayer sp)) return;
         rollIfCreatedAndMissing(sp);
         GrowthNetwork.sync(sp);
+        schedule(sp);
     }
 
     @SubscribeEvent
     public void respawn(PlayerEvent.PlayerRespawnEvent e) {
-        if (e.getEntity() instanceof ServerPlayer sp) GrowthNetwork.sync(sp);
+        if (e.getEntity() instanceof ServerPlayer sp) { GrowthNetwork.sync(sp); schedule(sp); }
     }
 
     @SubscribeEvent
     public void dim(PlayerEvent.PlayerChangedDimensionEvent e) {
-        if (e.getEntity() instanceof ServerPlayer sp) GrowthNetwork.sync(sp);
+        if (e.getEntity() instanceof ServerPlayer sp) { GrowthNetwork.sync(sp); schedule(sp); }
     }
 
     public static void rollIfCreatedAndMissing(ServerPlayer sp) {

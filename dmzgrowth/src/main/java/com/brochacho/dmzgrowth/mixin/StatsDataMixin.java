@@ -29,6 +29,7 @@ public abstract class StatsDataMixin {
         int base = cir.getReturnValue();
         if (base <= 0) return;
         StatsData self = (StatsData) (Object) this;
+        if (player.level().isClientSide) com.brochacho.dmzgrowth.client.ClientGrowthCache.ensure(player);
         player.getCapability(GrowthCapability.INSTANCE).ifPresent(g ->
                 cir.setReturnValue(Math.min(base, GrowthMath.maxPoints(self, statName, base, g))));
     }
