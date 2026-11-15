@@ -18,6 +18,8 @@ public class GrowthData {
     private int extremeSeconds;
     private int zenkaiStreak;
     private int trainingAccum;
+    private boolean liveInSession;  // solo informativo (no se guarda): si el servidor detecta un minijuego de TPs
+    private double liveRatio = -1;  // carga actual / peso ideal (-1 = no disponible)
     private String racialChoice = ""; // "" = accion racial normal de DMZ; "regeneration" = regeneracion
     private int unitsVersion; // 2 = Potencial y Limite en PODER (antes: puntos de stat)
     private String bioFormGroup = "";
@@ -116,6 +118,10 @@ public class GrowthData {
 
     public String getRacialChoice() { return racialChoice; }
     public void setRacialChoice(String c) { racialChoice = c == null ? "" : c; }
+
+    public boolean isLiveInSession() { return liveInSession; }
+    public double getLiveRatio() { return liveRatio; }
+    public void setLive(boolean inSession, double ratio) { liveInSession = inSession; liveRatio = ratio; }
 
     public int getExtremeSeconds() { return extremeSeconds; }
 

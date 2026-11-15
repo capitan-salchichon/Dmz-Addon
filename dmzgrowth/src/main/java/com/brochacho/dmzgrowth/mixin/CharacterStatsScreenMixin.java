@@ -103,6 +103,19 @@ public abstract class CharacterStatsScreenMixin {
             List<Component> lines = new java.util.ArrayList<>();
             lines.add(Component.literal(done + " / " + required + " s").withStyle(ChatFormatting.YELLOW));
             lines.add(Component.literal("Al completarlo se sube el Limite y el Potencial.").withStyle(ChatFormatting.GRAY));
+            boolean ins = ClientGrowthCache.inSession;
+            lines.add(Component.literal("Minijuego de TPs: " + (ins ? "detectado" : "no detectado")).withStyle(ins ? ChatFormatting.GREEN : ChatFormatting.RED));
+            if (ins) {
+                double r = ClientGrowthCache.ratio;
+                if (r < 0) {
+                    lines.add(Component.literal("Peso ideal no disponible (TPs desactivados).").withStyle(ChatFormatting.RED));
+                } else {
+                    boolean ok = r >= ClientGrowthCache.factor && r <= ClientGrowthCache.overload;
+                    lines.add(Component.literal("Carga actual: " + String.format(java.util.Locale.ROOT, "%.1f", r) + "x tu peso ideal"
+                            + (ok ? " (cuenta)" : r < ClientGrowthCache.factor ? " (poco peso, no cuenta)" : " (demasiado peso, pierdes progreso)"))
+                            .withStyle(ok ? ChatFormatting.GREEN : ChatFormatting.RED));
+                }
+            }
             lines.add(Component.literal("Cuenta en un minijuego de TPs con carga entre " + fmt(ClientGrowthCache.factor)
                     + "x y " + fmt(ClientGrowthCache.overload) + "x tu peso ideal.").withStyle(ChatFormatting.GRAY));
             TextUtil.renderAdvancedTooltip(g, font, mouseX, mouseY, getUiWidth(), getUiHeight(),

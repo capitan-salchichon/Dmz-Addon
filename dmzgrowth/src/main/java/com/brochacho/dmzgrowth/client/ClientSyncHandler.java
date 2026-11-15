@@ -10,9 +10,11 @@ import net.minecraft.nbt.CompoundTag;
 public final class ClientSyncHandler {
     private ClientSyncHandler() {}
 
-    public static void handle(CompoundTag tag, double factor, double overload, int seconds) {
+    public static void handle(CompoundTag tag, double factor, double overload, int seconds, boolean inSession, double ratio) {
         if (tag == null) return;
         ClientGrowthCache.store(tag, factor, overload, seconds);
+        ClientGrowthCache.inSession = inSession;
+        ClientGrowthCache.ratio = ratio;
         ClientGrowthCache.applyTo(Minecraft.getInstance().player);
     }
 }

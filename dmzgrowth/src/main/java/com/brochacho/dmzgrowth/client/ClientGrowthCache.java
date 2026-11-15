@@ -14,6 +14,8 @@ public final class ClientGrowthCache {
     public static volatile double factor = 5.0;
     public static volatile double overload = 6.0;
     public static volatile int secondsRequired = 300;
+    public static volatile boolean inSession = false;
+    public static volatile double ratio = -1;
 
     private ClientGrowthCache() {}
 
