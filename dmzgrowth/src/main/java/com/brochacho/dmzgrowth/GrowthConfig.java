@@ -10,8 +10,10 @@ public final class GrowthConfig {
     public static final ForgeConfigSpec.IntValue INITIAL_LIMIT;
     public static final ForgeConfigSpec.DoubleValue EXTREME_WEIGHT_FACTOR;
     public static final ForgeConfigSpec.IntValue EXTREME_SECONDS_REQUIRED;
-    public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_MULT_MIN;
-    public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_MULT_MAX;
+    public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_START_MIN;
+    public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_START_MAX;
+    public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_GROWTH;
+    public static final ForgeConfigSpec.DoubleValue EXTREME_MAX_UNSPENT;
     public static final ForgeConfigSpec.DoubleValue EXTREME_POTENTIAL_RATIO;
     public static final ForgeConfigSpec.BooleanValue EXTREME_REQUIRE_WEIGHT;
     public static final ForgeConfigSpec.IntValue EXTREME_MINIGAME_GRACE_SECONDS;
@@ -58,9 +60,13 @@ public final class GrowthConfig {
                 .define("requireWeight", true);
         EXTREME_SECONDS_REQUIRED = b.comment("Segundos acumulados EN UN MINIJUEGO DE TPS (con la carga requerida) para completar un Entrenamiento Extremo. Definido: 5 min.")
                 .defineInRange("secondsRequired", 300, 1, Integer.MAX_VALUE);
-        EXTREME_GAIN_MULT_MIN = b.comment("Ganancia aleatoria = Limite actual x [min..max]. Basado en tu ejemplo (1000 -> +4000 .. +25000). PROVISIONAL.")
-                .defineInRange("gainMultiplierMin", 4.0, 0.0, 1000.0);
-        EXTREME_GAIN_MULT_MAX = b.defineInRange("gainMultiplierMax", 25.0, 0.0, 1000.0);
+        EXTREME_GAIN_START_MIN = b.comment("Primera vez: ganancia aleatoria = Limite actual x [min..max]. PROVISIONAL (antes era x4..x25: demasiado).")
+                .defineInRange("startMultiplierMin", 0.3, 0.0, 1000.0);
+        EXTREME_GAIN_START_MAX = b.defineInRange("startMultiplierMax", 1.0, 0.0, 1000.0);
+        EXTREME_GAIN_GROWTH = b.comment("Cada Entrenamiento Extremo completado, el rango [min..max] se multiplica por (1 + este valor). 0.15 = +15% cada vez.")
+                .defineInRange("rangeGrowthPerCompletion", 0.15, 0.0, 10.0);
+        EXTREME_MAX_UNSPENT = b.comment("Para completar un Entrenamiento Extremo, el Potencial sin gastar debe ser como mucho esta fraccion del Limite (0.25 = 25%).")
+                .defineInRange("maxUnspentPotentialFraction", 0.25, 0.0, 1.0);
         EXTREME_POTENTIAL_RATIO = b.comment("Potencial ganado = ganancia de Limite x este ratio (1.0 = igual). PROVISIONAL.")
                 .defineInRange("potentialGainRatio", 1.0, 0.0, 100.0);
         b.pop();

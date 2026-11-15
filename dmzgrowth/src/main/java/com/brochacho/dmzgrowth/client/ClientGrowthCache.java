@@ -16,6 +16,7 @@ public final class ClientGrowthCache {
     public static volatile int secondsRequired = 300;
     public static volatile boolean inSession = false;
     public static volatile double ratio = -1;
+    public static volatile double maxUnspent = 0.25;
 
     private ClientGrowthCache() {}
 

@@ -103,6 +103,12 @@ public abstract class CharacterStatsScreenMixin {
             List<Component> lines = new java.util.ArrayList<>();
             lines.add(Component.literal(done + " / " + required + " s").withStyle(ChatFormatting.YELLOW));
             lines.add(Component.literal("Al completarlo se sube el Limite y el Potencial.").withStyle(ChatFormatting.GRAY));
+            lines.add(Component.literal("Proxima ganancia: " + NumberFormattingUtil.formatLargeNumber(gd.getLimit() * gd.nextGainLow()) + " a "
+                    + NumberFormattingUtil.formatLargeNumber(gd.getLimit() * gd.nextGainHigh()) + " de poder").withStyle(ChatFormatting.AQUA));
+            long maxUnspentPower = (long) (gd.getLimit() * ClientGrowthCache.maxUnspent);
+            if (done >= required && gd.getPotential() > maxUnspentPower)
+                lines.add(Component.literal("Barra llena: gasta Potencial hasta tener menos de " + NumberFormattingUtil.formatLargeNumber(maxUnspentPower)
+                        + " para completarlo.").withStyle(ChatFormatting.RED));
             boolean ins = ClientGrowthCache.inSession;
             lines.add(Component.literal("Minijuego de TPs: " + (ins ? "detectado" : "no detectado")).withStyle(ins ? ChatFormatting.GREEN : ChatFormatting.RED));
             if (ins) {

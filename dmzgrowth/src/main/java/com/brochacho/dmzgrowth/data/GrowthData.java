@@ -16,6 +16,7 @@ public class GrowthData {
     private long potential;
     private long limit;
     private int extremeSeconds;
+    private int extremeCount; // Entrenamientos Extremos completados (sube el rango de ganancia)
     private int zenkaiStreak;
     private int trainingAccum;
     private long lastSessionTime = -1; // tick de juego en que se vio por ultima vez una sesion de minijuego (no se guarda)
@@ -59,19 +60,38 @@ public class GrowthData {
         return true;
     }
 
+    private static double rangeFactor(int count) { return Math.pow(1.0 + GrowthConfig.EXTREME_GAIN_GROWTH.get(), count); }
+
+    /** Multiplicador minimo / maximo (sobre el Limite) de la PROXIMA ganancia. */
+    public double nextGainLow() {
+        return Math.min(GrowthConfig.EXTREME_GAIN_START_MIN.get(), GrowthConfig.EXTREME_GAIN_START_MAX.get()) * rangeFactor(extremeCount);
+    }
+    public double nextGainHigh() {
+        return Math.max(GrowthConfig.EXTREME_GAIN_START_MIN.get(), GrowthConfig.EXTREME_GAIN_START_MAX.get()) * rangeFactor(extremeCount);
+    }
+
+    /** Solo se puede completar si el Potencial sin gastar es poco (fuerza a gastar antes de volver a ganar). */
+    public boolean canCompleteExtreme() {
+        return potential <= (long) (limit * GrowthConfig.EXTREME_MAX_UNSPENT.get());
+    }
+
     /** Suma 1 segundo de Entrenamiento Extremo; devuelve la ganancia de Limite si se completo, o 0. */
     public long tickExtremeSecond(RandomSource random) {
         if (!rolled) return 0L;
-        if (++extremeSeconds < GrowthConfig.EXTREME_SECONDS_REQUIRED.get()) return 0L;
+        int required = GrowthConfig.EXTREME_SECONDS_REQUIRED.get();
+        if (extremeSeconds < required) extremeSeconds++;
+        if (extremeSeconds < required) return 0L;
+        if (!canCompleteExtreme()) return 0L; // barra llena: espera a que gastes Potencial
         extremeSeconds = 0;
-        double lo = Math.min(GrowthConfig.EXTREME_GAIN_MULT_MIN.get(), GrowthConfig.EXTREME_GAIN_MULT_MAX.get());
-        double hi = Math.max(GrowthConfig.EXTREME_GAIN_MULT_MIN.get(), GrowthConfig.EXTREME_GAIN_MULT_MAX.get());
-        double mult = lo + random.nextDouble() * (hi - lo);
+        double mult = nextGainLow() + random.nextDouble() * (nextGainHigh() - nextGainLow());
         long gain = Math.max(1L, Math.round(limit * mult));
         limit += gain;
         potential += Math.round(gain * GrowthConfig.EXTREME_POTENTIAL_RATIO.get());
+        extremeCount++;
         return gain;
     }
+
+    public int getExtremeCount() { return extremeCount; }
 
     /** Entrenar con demasiado peso es contraproducente: se pierde progreso acumulado (nunca baja de 0). */
     public void penalizeExtreme(int seconds) {
@@ -100,6 +120,7 @@ public class GrowthData {
         potential = initialPotential;
         limit = GrowthConfig.INITIAL_LIMIT.get();
         extremeSeconds = 0;
+        extremeCount = 0;
         zenkaiStreak = 0;
         trainingAccum = 0;
         unitsVersion = 2;
@@ -136,6 +157,7 @@ public class GrowthData {
         t.putLong("Potential", potential);
         t.putLong("Limit", limit);
         t.putInt("ExtremeSeconds", extremeSeconds);
+        t.putInt("ExtremeCount", extremeCount);
         t.putInt("ZenkaiStreak", zenkaiStreak);
         t.putInt("TrainingAccum", trainingAccum);
         t.putString("RacialChoice", racialChoice);
@@ -154,6 +176,7 @@ public class GrowthData {
         potential = t.getLong("Potential");
         limit = t.getLong("Limit");
         extremeSeconds = t.getInt("ExtremeSeconds");
+        extremeCount = t.getInt("ExtremeCount");
         zenkaiStreak = t.getInt("ZenkaiStreak");
         trainingAccum = t.getInt("TrainingAccum");
         racialChoice = t.getString("RacialChoice");
