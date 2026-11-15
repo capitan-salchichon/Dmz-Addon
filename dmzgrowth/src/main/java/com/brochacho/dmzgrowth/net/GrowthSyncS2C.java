@@ -2,7 +2,6 @@ package com.brochacho.dmzgrowth.net;
 
 import com.brochacho.dmzgrowth.data.GrowthCapability;
 import com.brochacho.dmzgrowth.data.GrowthData;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,11 +34,8 @@ public class GrowthSyncS2C {
     public static GrowthSyncS2C decode(FriendlyByteBuf b) { return new GrowthSyncS2C(b.readNbt(), b.readDouble(), b.readDouble(), b.readVarInt()); }
 
     public static void handle(GrowthSyncS2C m, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
-            if (m.tag == null) return;
-            com.brochacho.dmzgrowth.client.ClientGrowthCache.store(m.tag, m.factor, m.overload, m.seconds);
-            com.brochacho.dmzgrowth.client.ClientGrowthCache.applyTo(Minecraft.getInstance().player);
-        }));
+        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT,
+                () -> () -> com.brochacho.dmzgrowth.client.ClientSyncHandler.handle(m.tag, m.factor, m.overload, m.seconds)));
         ctx.get().setPacketHandled(true);
     }
 }
