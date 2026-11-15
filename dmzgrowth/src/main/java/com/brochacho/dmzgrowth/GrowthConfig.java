@@ -14,6 +14,7 @@ public final class GrowthConfig {
     public static final ForgeConfigSpec.DoubleValue EXTREME_GAIN_MULT_MAX;
     public static final ForgeConfigSpec.DoubleValue EXTREME_POTENTIAL_RATIO;
     public static final ForgeConfigSpec.BooleanValue EXTREME_REQUIRE_WEIGHT;
+    public static final ForgeConfigSpec.IntValue EXTREME_MINIGAME_GRACE_SECONDS;
     public static final ForgeConfigSpec.IntValue SCOUTER_RANGE;
     public static final ForgeConfigSpec.IntValue SCOUTER_INTERVAL_TICKS;
     public static final ForgeConfigSpec.IntValue SCOUTER_MAX_ENTRIES;
@@ -51,6 +52,8 @@ public final class GrowthConfig {
                 .defineInRange("overloadRatio", 6.0, 1.0, 100.0);
         EXTREME_OVERLOAD_PENALTY_SECONDS = b.comment("PROVISIONAL. Segundos de progreso que se pierden por cada segundo en sobrecarga dentro del minijuego.")
                 .defineInRange("overloadPenaltySeconds", 2, 0, 1000);
+        EXTREME_MINIGAME_GRACE_SECONDS = b.comment("DMZ abre una sesion nueva por cada partida: entre partidas (pantalla de resultado, reintentar) no hay sesion. Segundos que se sigue contando despues de terminar una. 0 = estricto.")
+                .defineInRange("minigameGraceSeconds", 20, 0, 120);
         EXTREME_REQUIRE_WEIGHT = b.comment("Ademas del minijuego, exigir carga >= factor x peso ideal (prompt maestro). Pon false para contar solo el minijuego.")
                 .define("requireWeight", true);
         EXTREME_SECONDS_REQUIRED = b.comment("Segundos acumulados EN UN MINIJUEGO DE TPS (con la carga requerida) para completar un Entrenamiento Extremo. Definido: 5 min.")

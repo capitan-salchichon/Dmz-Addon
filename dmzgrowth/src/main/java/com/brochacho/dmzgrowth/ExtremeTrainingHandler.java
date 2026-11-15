@@ -23,7 +23,11 @@ public class ExtremeTrainingHandler {
         GrowthData g = sp.getCapability(GrowthCapability.INSTANCE).resolve().orElse(null);
         if (g == null) return;
 
-        boolean inSession = MinigameSessionsAccessor.dmzgrowth$getSessions().containsKey(sp.getUUID());
+        // DMZ crea una sesion por partida; entre partidas no hay sesion. Se mantiene "en minijuego" unos segundos despues de la ultima.
+        long now = sp.level().getGameTime();
+        if (MinigameSessionsAccessor.dmzgrowth$getSessions().containsKey(sp.getUUID())) g.setLastSessionTime(now);
+        long grace = GrowthConfig.EXTREME_MINIGAME_GRACE_SECONDS.get() * 20L;
+        boolean inSession = sp.isAlive() && g.getLastSessionTime() >= 0 && now - g.getLastSessionTime() <= grace;
         double ratio = -1;
         if (inSession && GravityLogic.getIdealWeight(sp) > 0) ratio = GravityLogic.getLoadRatio(sp);
 
