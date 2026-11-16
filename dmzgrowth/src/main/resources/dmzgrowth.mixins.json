@@ -28,6 +28,7 @@
     "RacialRequestScreenMixin",
     "NamekRegenNodeMixin",
     "RacialSkillNodeMixin",
+    "BioSkillChoiceNodeMixin",
     "AssimilationWrapMixin"
   ],
   "injectors": { "defaultRequire": 1 }

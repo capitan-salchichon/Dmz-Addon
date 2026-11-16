@@ -38,8 +38,8 @@ public abstract class BioAndroidDrainMixin {
         Entity target = DRAINING.get();
         DRAINING.remove();
         if (target == null || ctx.data().getStatus().getDrainingTargetId() != -1) return;
-        // DMZ cierra la absorcion cuando la vida del objetivo llega a 1 y lo mata; si sobrevive (Zenkai, totem) tambien cuenta.
-        if (target.isAlive() && target instanceof net.minecraft.world.entity.LivingEntity living && living.getHealth() > 1.0f) return;
+        // DMZ solo pone el objetivo a -1 DENTRO de onSecond cuando completa la absorcion (luego llama a kill()). No se mira el
+        // estado del objetivo: un jugador derribado o con Zenkai puede no morir ni quedar en 1 de vida y aun asi fue absorbido.
 
         String key = race(target);
         if (key == null) return;

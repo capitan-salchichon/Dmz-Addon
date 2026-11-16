@@ -76,6 +76,17 @@ public abstract class CharacterStatsScreenMixin {
                         null, 0xFFFF00);
             }
         }
+        if (gr != null && (gr.hasAcquired("regeneration") || gr.hasAcquired("zenkai"))) {
+            StringBuilder sb = new StringBuilder();
+            if (gr.hasAcquired("regeneration")) sb.append("Regeneracion");
+            if (gr.hasAcquired("zenkai")) sb.append(sb.length() > 0 ? ", " : "").append("Zenkai");
+            int ay = y0 + 7 * 12;
+            Component al = Component.literal("Absorbidas"), asep = Component.literal(": ");
+            TextUtil.drawStringWithBorder(g, font, al, x, ay, LABEL, 0x000000);
+            int ax = x + font.width(al);
+            TextUtil.drawStringWithBorder(g, font, asep, ax, ay, LABEL, 0x000000);
+            TextUtil.drawStringWithBorder(g, font, Component.literal(sb.toString()), ax + font.width(asep), ay, 0x55FF55, 0x000000);
+        }
         dmzgrowth$extremeBar(g, font, getUiWidth() - 137, centerY + 30, mouseX, mouseY);
     }
 
