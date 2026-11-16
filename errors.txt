@@ -1,0 +1,31 @@
+MixinGradle is skipping eclipse integration, extension not found
+
+> Task :downloadMcpConfig
+> Task :extractSrg
+> Task :createMcpToSrg
+--
+Note: SpongePowered MIXIN Annotation Processor Version=0.8.5 (MixinGradle Version=0.7.38)
+Note: Supported obfuscation types: ObfuscationServiceMCP supports [notch] ObfuscationServiceFG3 supports [searge]
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing refmap to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-refmap.json
+Note: Writing searge composite mappings to /home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/build/tmp/compileJava/compileJava-mappings.tsrg
+--
+/home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/src/main/java/com/brochacho/dmzgrowth/DMZGrowth.java:17: warning: [removal] get() in FMLJavaModLoadingContext has been deprecated and marked for removal
+        var bus = FMLJavaModLoadingContext.get().getModEventBus();
+                                          ^
+/home/runner/work/Dmz-Addon/Dmz-Addon/dmzgrowth/src/main/java/com/brochacho/dmzgrowth/DMZGrowth.java:18: warning: [removal] get() in ModLoadingContext has been deprecated and marked for removal
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GrowthConfig.SPEC);
+                         ^
+2 warnings
+
+> Task :addMixinsToJar
+> Task :processResources
+> Task :classes
+> Task :jar
+> Task :configureReobfTaskForReobfJar
+--
+> Task :addMixinsToJarJar
+> Task :jarJar SKIPPED
+> Task :reobfJarJar SKIPPED
+> Task :assemble
+> Task :compileTestJava NO-SOURCE
